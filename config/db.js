@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 mongoose.Promise = global.Promise;
 
-const moment = new Date.now()
+const moment = new Date
 
 mongoose.connect('mongodb://')
 
