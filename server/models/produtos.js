@@ -1,4 +1,3 @@
-import { mongo } from 'mongoose';
 
 const mongoose = require('mongoose')
 
@@ -29,4 +28,5 @@ const produtosSchema = new Schema({
         type: String
     }
 });
+
 mongoose.model('produtos', produtosSchema)

@@ -1,9 +1,11 @@
-#Server 
+
+# Server
+
 #### By Ryan Lucas
 
 > We always need to renew!
 
-##Our objectives:
+####Our objectives:
 
 1. Makes the app lighter
 
@@ -11,9 +13,8 @@
 
 3. Finish the routes to RESTapi
 
+####Run
 
-#Run
+1. **npm install**
 
-1. 'npm install' 
-
-2. 'npm start'
+2. **npm start**

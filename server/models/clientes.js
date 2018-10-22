@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
 const clientesSchema = new Schema({
-    nome: {
+    name: {
         type: String,
         required: true,
     },
@@ -11,18 +11,28 @@ const clientesSchema = new Schema({
         type: String,
         required: true
     },
-    dataAniversario: {
+    birth: {
         type: Date,
         required: true
     },
-    rua: {
+    street: {
         type: String
     },
-    bairro: {
+    //bairros
+    ngh: {
         type: String
     },
-    cidade: {
+    city: {
         type: String
+    },
+    phone: {
+        type: Number,
+        required: true
+    },
+    defaulting: {
+        type: Boolean,
+        default: false
     }
 });
+
 mongoose.model('cliente', clientesSchema)
