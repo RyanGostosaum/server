@@ -1,9 +1,9 @@
+
 const mongoose = require('mongoose')
 
 const ClientSchema = require('../models/clientes')
 
 const modelUser = mongoose.model('Client');
-
 
 const Joi = require('joi');
 
@@ -59,9 +59,11 @@ clientController.newUser = (req, res) => {
 
                 Joi.validate(client, validatorClient, (err, value) => {
 
-                    console.log('Dados: ' + JSON.stringify(client));
+                    console.log(client);
 
                     if (err) {
+
+                        console.log('Deu rui' + err);
 
                         res.status(422).json({
                             success: false,
@@ -69,7 +71,6 @@ clientController.newUser = (req, res) => {
                             data: data
                         });
 
-                        console.log('Deu rui' + err);
                     } else {
 
                         client.save()
