@@ -1,23 +1,13 @@
-const routes = require('../../../config/express')();
-const bodyParser = require('body-parser');
-const Joi = require('joi');
-const validatorClient = require('./validators/');
+const routes = require('express').Router()
+const clientController = require('../../controllers/clientes')
 
-routes.post('/client', (req, res) => {
-
-    const schema = validatorClient
-
-    Joi.validate(data, schema, (err, value) => {
-
-        if (err) {
-
-            res.status(422).json({
-
-                status: 'erro'
-                
-            })
-        } else {
-
-        }
-    })
+routes.get('/', (req, res) => {
+    res.send('hello world!')
 });
+
+routes.route('/api/client')
+    .get(clientController.allUsers)
+    .post(clientController.newUser)
+
+    
+module.exports = routes

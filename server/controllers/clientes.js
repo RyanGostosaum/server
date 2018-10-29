@@ -1,5 +1,12 @@
 const mongoose = require('mongoose')
-const modelUser = mongoose.model('cliente');
+
+const ClientSchema = require('../models/clientes')
+
+const modelUser = mongoose.model('Client');
+
+const validatorClient = require('../routes/validators/index');
+
+const Joi = require('joi');
 
 let clientController = {};
 
@@ -8,8 +15,8 @@ clientController.allUsers = (req, res) => {
     modelUser.find()
         .then(results => res.json(results), console.log(results))
         .catch(err => res.send(err));
-        
 }
+
 
 clientController.newUser = (req, res) => {
 
@@ -38,20 +45,37 @@ clientController.newUser = (req, res) => {
                         birth: req.body.name,
                     }
 
-                    client.save()
+                    Joi.validate(client, validatorClient, (err, value) => {
 
-                        .then(() => res.json({
-                            success: true,
-                            message: 'Cliente registrado!',
-                            statusCode: 201
-                        }))
+                        if (err) {
 
-                        .catch(err => res.json({
-                            success: false,
-                            message: err,
-                            statusCode: 500
+                            res.status(422).json({
+                                success: false,
+                                message: 'Invalid request data',
+                                data: data
+                            });
 
-                        }));
+                        } else {
+
+                            client.save()
+
+                                .then(() => res.json({
+                                    success: true,
+                                    message: 'Cliente registrado!',
+                                    statusCode: 201
+                                }))
+
+                                .catch(err => res.json({
+                                    success: false,
+                                    message: err,
+                                    statusCode: 500
+
+                                }));
+                        }
+
+                    })
+
+
                 }
 
             })
