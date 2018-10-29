@@ -20,7 +20,7 @@ clientController.allUsers = (req, res) => {
 
 clientController.newUser = (req, res) => {
 
-    if (req.body.name && req.body.email) {
+    if (req.body.name) {
 
         modelUser.findOne({
                 'name': req.body.name
