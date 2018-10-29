@@ -3,9 +3,9 @@ const Joi = require('joi');
 module.exports = () => {
 
     const validatorClient = {
-        name: Joi.string().alphanum().min(2).max(35).required(),
+        name: Joi.string().alphanum().min(2).max(35),
         email: Joi.string().email(),
-        phone: Joi.string().required() ,
+        phone: Joi.string(),
         birth: Joi.number().integer().min(1900).max(2018),
         street: Joi.string(),
         ngh: Joi.string(),

@@ -22,7 +22,7 @@ module.exports = () => {
 
     app.use('/', routes);
 
-    consign({cwd: '../server/'})
+    consign({cwd: '../server'})
     .include('models')
     .include('controllers')
     .then('routes')

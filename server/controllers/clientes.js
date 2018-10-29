@@ -4,82 +4,97 @@ const ClientSchema = require('../models/clientes')
 
 const modelUser = mongoose.model('Client');
 
-const validatorClient = require('../routes/validators/index');
 
 const Joi = require('joi');
 
+
+const validatorClient = {
+    name: Joi.string().alphanum().min(2).max(35),
+    email: Joi.string().email(),
+    phone: Joi.string(),
+    birth: Joi.number().integer().min(1900).max(2018),
+    street: Joi.string(),
+    ngh: Joi.string(),
+    city: Joi.string()
+}
+
 let clientController = {};
+
 
 clientController.allUsers = (req, res) => {
 
+    console.log('Buscando...');
+
     modelUser.find()
-        .then(results => res.json(results), console.log(results))
+        .then(results => res.json(results))
         .catch(err => res.send(err));
 }
 
 
 clientController.newUser = (req, res) => {
 
-    if (req.body.name) {
+    console.log('ok!');
 
-        modelUser.findOne({
-                'name': req.body.name
-            })
-            .then(user => {
+    modelUser.findOne({
+            'name': req.body.name
+        })
+        .then(user => {
 
-                if (user) {
+            if (user) {
 
-                    res.json({
+                res.json({
 
-                        success: false,
-                        message: 'Esse nome já está cadastrado'
+                    success: false,
+                    message: 'Esse nome já está cadastrado'
 
-                    });
+                });
 
-                } else {
+            } else {
 
-                    let client = {
-                        name: req.body.name,
-                        email: req.body.email,
-                        phone: req.body.phone,
-                        birth: req.body.name,
-                    }
-
-                    Joi.validate(client, validatorClient, (err, value) => {
-
-                        if (err) {
-
-                            res.status(422).json({
-                                success: false,
-                                message: 'Invalid request data',
-                                data: data
-                            });
-
-                        } else {
-
-                            client.save()
-
-                                .then(() => res.json({
-                                    success: true,
-                                    message: 'Cliente registrado!',
-                                    statusCode: 201
-                                }))
-
-                                .catch(err => res.json({
-                                    success: false,
-                                    message: err,
-                                    statusCode: 500
-
-                                }));
-                        }
-
-                    })
-
-
+                let client = {
+                    name: req.body.name,
+                    email: req.body.email,
+                    phone: req.body.phone
                 }
 
-            })
-    }
+                Joi.validate(client, validatorClient, (err, value) => {
+
+                    console.log('Dados: ' + JSON.stringify(client));
+
+                    if (err) {
+
+                        res.status(422).json({
+                            success: false,
+                            message: 'Invalid request data',
+                            data: data
+                        });
+
+                        console.log('Deu rui' + err);
+                    } else {
+
+                        client.save()
+
+                            .then(() => res.json({
+                                success: true,
+                                message: 'Cliente registrado!',
+                                statusCode: 201
+                            }))
+
+                            .catch(err => res.json({
+                                success: false,
+                                message: err,
+                                statusCode: 500
+
+                            }));
+                    }
+
+                })
+
+
+            }
+
+        })
+
 
 }
 

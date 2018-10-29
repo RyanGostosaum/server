@@ -13,7 +13,6 @@ const ClientSchema = new Schema({
     },
     birth: {
         type: Date,
-        required: true
     },
     street: {
         type: String
