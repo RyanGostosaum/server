@@ -2,14 +2,17 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema;
 
+//TODO: Start validation with mongoose-validator
+// ! You also need to finish the products system
+
 const ClientSchema = new Schema({
     name: {
         type: String,
         required: true,
+        minlength: 2
     },
     email: {
-        type: String,
-        required: true
+        type: String
     },
     birth: {
         type: Date,
@@ -29,8 +32,7 @@ const ClientSchema = new Schema({
         required: true
     },
     defaulting: {
-        type: Boolean,
-        default: false
+        type: Boolean
     }
 });
 

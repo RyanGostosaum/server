@@ -1,25 +1,10 @@
-
 const mongoose = require('mongoose')
 
 const ClientSchema = require('../models/clientes')
 
 const modelUser = mongoose.model('Client');
 
-const Joi = require('joi');
-
-
-const validatorClient = {
-    name: Joi.string().alphanum().min(2).max(35),
-    email: Joi.string().email(),
-    phone: Joi.string(),
-    birth: Joi.number().integer().min(1900).max(2018),
-    street: Joi.string(),
-    ngh: Joi.string(),
-    city: Joi.string()
-}
-
 let clientController = {};
-
 
 clientController.allUsers = (req, res) => {
 
@@ -51,52 +36,37 @@ clientController.newUser = (req, res) => {
 
             } else {
 
-                let client = {
+                var client = new modelUser({
                     name: req.body.name,
-                    email: req.body.email,
-                    phone: req.body.phone
-                }
-
-                Joi.validate(client, validatorClient, (err, value) => {
-
-                    console.log(client);
-
-                    if (err) {
-
-                        console.log('Deu rui' + err);
-
-                        res.status(422).json({
-                            success: false,
-                            message: 'Invalid request data',
-                            data: data
-                        });
-
-                    } else {
-
-                        client.save()
-
-                            .then(() => res.json({
-                                success: true,
-                                message: 'Cliente registrado!',
-                                statusCode: 201
-                            }))
-
-                            .catch(err => res.json({
-                                success: false,
-                                message: err,
-                                statusCode: 500
-
-                            }));
-                    }
-
+                    phone: req.body.phone,
+                    email: req.body.email
                 })
 
+                console.log(JSON.stringify(client) + ' São os inputs');
+                // Joi.validate(client, validatorClient, (err, value) => {
 
+
+
+                client.save()
+
+                    .then(() => res.json({
+                        success: true,
+                        message: 'Cliente registrado!',
+                        statusCode: 201
+                    }))
+
+                    .catch(err => res.json({
+                        success: false,
+                        message: err,
+                        statusCode: 500
+
+                    }));
             }
 
+            //      })
+
+
         })
-
-
 }
 
 

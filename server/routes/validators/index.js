@@ -5,7 +5,7 @@ module.exports = () => {
     const validatorClient = {
         name: Joi.string().alphanum().min(2).max(35),
         email: Joi.string().email(),
-        phone: Joi.string(),
+        phone: Joi.any(),
         birth: Joi.number().integer().min(1900).max(2018),
         street: Joi.string(),
         ngh: Joi.string(),
