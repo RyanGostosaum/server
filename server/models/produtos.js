@@ -1,9 +1,8 @@
-
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema;
 
-const produtosSchema = new Schema({
+const ProductSchema = new Schema({
     code: {
         type: String,
         required: true,
@@ -13,7 +12,7 @@ const produtosSchema = new Schema({
         required: true
     },
     date: {
-        type: Date,
+        type: String,
         required: true
     },
     preco: {
@@ -22,11 +21,15 @@ const produtosSchema = new Schema({
     },
     quantidade: {
         type: Number,
-        required: true
     },
     marca: {
         type: String
+    },
+
+    group: {
+        type: String,
+        default: 'Não definido'
     }
 });
 
-mongoose.model('produtos', produtosSchema)
+module.exports = mongoose.model.Product || mongoose.model('Product', ProductSchema)

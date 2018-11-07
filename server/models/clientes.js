@@ -1,26 +1,31 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+
+const validator = require('./validators/index');
 
 const Schema = mongoose.Schema;
 
 //TODO: Start validation with mongoose-validator
 // ! You also need to finish the products system
 
+const time = new Date
+const day = time.getDate() + '/' + time.getMonth() + '/' + time.getFullYear()
+
 const ClientSchema = new Schema({
     name: {
         type: String,
         required: true,
-        minlength: 2
+        validate: validator
     },
     email: {
         type: String
     },
     birth: {
-        type: Date,
+        type: String,
     },
     street: {
         type: String
     },
-    //bairros
+    //bairro
     ngh: {
         type: String
     },
@@ -33,6 +38,10 @@ const ClientSchema = new Schema({
     },
     defaulting: {
         type: Boolean
+    },
+    modified: {
+        type: String,
+        default: day
     }
 });
 

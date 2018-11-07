@@ -4,6 +4,10 @@ const ClientSchema = require('../models/clientes')
 
 const modelUser = mongoose.model('Client');
 
+/*
+    Crud começa aqui, os controllers definem as ações de cada rota
+*/
+
 let clientController = {};
 
 clientController.allUsers = (req, res) => {
@@ -15,6 +19,17 @@ clientController.allUsers = (req, res) => {
         .catch(err => res.send(err));
 }
 
+clientController.someUsers = (req, res) => {
+
+    console.log('Buscando...' + req.params);
+
+    modelUser.findById(req.params.id)
+        .then(results => res.json(results))
+        .catch(err => res.json({
+            message: 'Cliente não encontrado',
+            status: 400
+        }));
+}
 
 clientController.newUser = (req, res) => {
 
@@ -39,7 +54,12 @@ clientController.newUser = (req, res) => {
                 var client = new modelUser({
                     name: req.body.name,
                     phone: req.body.phone,
-                    email: req.body.email
+                    email: req.body.email,
+                    birth: req.body.birth,
+                    street: req.body.street,
+                    ngh: req.body.ngh,
+                    city: req.body.city,
+                    modified: req.body.modified
                 })
 
                 console.log(JSON.stringify(client) + ' São os inputs');
@@ -69,10 +89,77 @@ clientController.newUser = (req, res) => {
         })
 }
 
+clientController.updateUsers = (req, res) => {
+    console.log('Buscando o put...');
+    console.log(req.body)
+    console.log(req.params);
+
+    modelUser.findByIdAndUpdate(
+        req.params.id,
+        req.body, {
+            new: true
+        },
+        (err, user) => {
+
+            if (user) {
+
+
+                res.json({
+
+                    message: 'Update feito!',
+                    data: user,
+                    statusCode: 201
+
+                })
+
+            } else {
+
+                res.json({
+
+                    message: 'Error',
+                    statusCode: 404
+
+                })
+            }
+        }
+    )
+
+}
+
+clientController.deleteUsers = (req, res) => {
+
+    console.log(req.params);
+
+    modelUser.findByIdAndRemove(req.params.id, (err, user) => {
+
+        if (err) {
+
+            res.json({
+
+                message: 'Error',
+                statusCode: 400
+
+            })
+
+        } else {
+
+            res.json({
+
+                message: "Cliente deletado",
+                data: user._id,
+                statusCode: 201
+
+            })
+        }
+    })
+
+}
+
+// ! Crud básico termina aqui
 
 module.exports = clientController;
 
-/*
+/* ?
 let client = {
     name: req.body.name,
     email: req.body.email,
