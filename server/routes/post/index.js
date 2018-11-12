@@ -18,6 +18,11 @@ routes.use(bodyParser.text({
 routes.get('/', (req, res) => {
     res.send('hello world!')
 });
+routes.get('/secret', (req, res) => {
+    res.send('hello secret world!')
+});
+
+
 
 routes.post('/api', function (req, res) {
 
@@ -25,6 +30,8 @@ routes.post('/api', function (req, res) {
 
     console.log(JSON.stringify(req.body));
 })
+routes.route('/login')
+    .post(userController.login)
 
 routes.route('/api/client/')
     .get(clientController.allUsers)
@@ -44,9 +51,10 @@ routes.route('/api/product/:id')
     .put(productController.updateProducts)
     .delete(productController.deleteProducts)
 
-routes.route('/api/newAdmin')
+routes.route('/api/admin')
     .get(userController.allUsers)
     .post(userController.newUser)
     .delete(userController.deleteUser)
+
 
 module.exports = routes
