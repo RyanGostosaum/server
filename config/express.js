@@ -5,7 +5,8 @@ const cookieParser = require('cookie-parser');
 const consign = require('consign');
 const path = require('path');
 const session = require('express-session');
-const routes = require('../server/routes/post/index')
+const routes = require('../server/routes/post/index');
+const helmet  = require('helmet')
 
 module.exports = () => {
 
@@ -17,7 +18,11 @@ module.exports = () => {
         extended: true
     }));
 
+    app.use(helmet());
+
     app.use(bodyParser.json());
+
+    app.disable('x-powered-by');
 
     app.use(cookieParser());
 

@@ -28,46 +28,46 @@ productController.someProducts = (req, res) => {
 productController.newProducts = (req, res) => {
 
     productModel.findOne({
-        'code': req.body.code
-    })
+            'code': req.body.code
+        })
 
-    .then(product => {
+        .then(product => {
 
-        if(product) {
+            if (product) {
 
-            res.json({
+                res.json({
 
-                success: false, 
-                message: 'Produto já foi cadastrado'
+                    success: false,
+                    message: 'Produto já foi cadastrado'
 
-            });
-        } else {
+                });
+            } else {
 
-            var product = new productModel({
-                code: req.body.code,
-                nome: req.body.code,
-                date: req.body.date, 
-                preco: req.body.preco, 
-                marca: req.body.marca, 
-                quantidade: req.body.quantidade, 
-                group: req.body.group
-            })
+                var product = new productModel({
+                    code: req.body.code,
+                    nome: req.body.code,
+                    date: req.body.date,
+                    preco: req.body.preco,
+                    marca: req.body.marca,
+                    quantidade: req.body.quantidade,
+                    group: req.body.group
+                })
 
-            product.save()
+                product.save()
 
-            .then(() => res.json({
-                success: true, 
-                message: 'Produto registrado', 
-                status: 201
-            }))
+                    .then(() => res.json({
+                        success: true,
+                        message: 'Produto registrado',
+                        status: 201
+                    }))
 
-            .catch(err => res.json({
-                success: false, 
-                message: err, 
-                status: 500
-            }))
-        }
-    })
+                    .catch(err => res.json({
+                        success: false,
+                        message: err,
+                        status: 500
+                    }))
+            }
+        })
 }
 
 productController.updateProducts = (req, res) => {
@@ -75,7 +75,7 @@ productController.updateProducts = (req, res) => {
     console.log(req.body.quantidade);
 
     productModel.findByIdAndUpdate(
-        req.params.id, 
+        req.params.id,
         req.body, {
             new: true
         }, (err, product) => {
@@ -85,13 +85,13 @@ productController.updateProducts = (req, res) => {
                 res.json({
 
                     message: 'Update feito!',
-                    date: product, 
+                    date: product,
                     status: 201
                 })
 
             } else {
                 res.json({
-                    message: 'Error', 
+                    message: 'Error',
                     status: 404
                 })
             }
@@ -106,14 +106,14 @@ productController.deleteProducts = (req, res) => {
         if (err) {
 
             res.json({
-                message: 'Error', 
+                message: 'Error',
                 status: 400
             })
-            
+
         } else {
             res.json({
-                message: 'Produto deletado', 
-                data: product, 
+                message: 'Produto deletado',
+                data: product,
                 status: 201
             })
         }

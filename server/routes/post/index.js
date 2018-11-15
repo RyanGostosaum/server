@@ -2,7 +2,9 @@ const routes = require('express').Router()
 const clientController = require('../../controllers/clientes');
 const productController = require('../../controllers/produtos');
 const userController = require('../../controllers/user');
+const fileController = require('../../controllers/xml/index');
 const bodyParser = require('body-parser');
+//const upload = multer({ dest: '../../uploads' });
 const checkAuth = require('../../middleware/check-auth')
 
 
@@ -17,35 +19,35 @@ routes.use(bodyParser.text({
     type: 'text/html'
 }))
 
-routes.get('/', checkAuth, (req, res) => {
-    res.send('hello world!')
-});
-routes.get('/secret', checkAuth, (req, res) => {
+routes.route('/', checkAuth)
+    .post(fileController.upload)
+
+routes.get('/api/v1/secret', checkAuth, (req, res) => {
     res.send('hello secret world!')
 });
 
-routes.route('/login')
+routes.route('/api/v1/login')
     .post(userController.login)
 
-routes.route('/client/')
+routes.route('/api/v1/client/')
     .get(checkAuth, clientController.allUsers)
     .post(checkAuth, clientController.newUser)
 
-routes.route('/client/:id')
+routes.route('/api/v1/client/:id')
     .get(checkAuth, clientController.someUsers)
     .put(checkAuth, clientController.updateUsers)
     .delete(checkAuth, clientController.deleteUsers);
 
-routes.route('/product')
+routes.route('/api/v1/product')
     .get(checkAuth, productController.allProducts)
     .post(checkAuth, productController.newProducts)
 
-routes.route('/product/:id')
+routes.route('/api/v1/product/:id')
     .get(checkAuth, productController.someProducts)
     .put(checkAuth, productController.updateProducts)
     .delete(checkAuth, productController.deleteProducts)
 
-routes.route('/admin')
+routes.route('/api/v1/admin')
     .get(checkAuth, userController.allUsers)
     .post(checkAuth, userController.newUser)
     .delete(checkAuth, userController.deleteUser)
