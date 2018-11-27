@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const consign = require('consign');
 const path = require('path');
+const cors = require('cors');
 const session = require('express-session');
 const routes = require('../server/routes/post/index');
 const helmet  = require('helmet')
@@ -17,6 +18,8 @@ module.exports = () => {
     app.use(bodyParser.urlencoded({
         extended: true
     }));
+
+    app.use(cors());
 
     app.use(helmet());
 

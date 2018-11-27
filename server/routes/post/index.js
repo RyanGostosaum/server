@@ -11,8 +11,18 @@ const checkAuth = require('../../middleware/check-auth')
 // parse various different custom JSON types as JSON
 routes.use(bodyParser.json())
 routes.use(bodyParser.urlencoded({
-    extended: true
+    extended: false
 }));
+// parse various different custom JSON types as JSON
+routes.use(bodyParser.json({
+    type: 'application/json'
+}))
+
+// parse some custom thing into a Buffer
+routes.use(bodyParser.raw({
+    type: 'application/vnd.custom-type'
+}))
+
 
 // parse an HTML body into a string
 routes.use(bodyParser.text({
@@ -26,7 +36,7 @@ routes.get('/api/v1/secret', checkAuth, (req, res) => {
     res.send('hello secret world!')
 });
 
-routes.route('/api/v1/login')
+routes.route('/login')
     .post(userController.login)
 
 routes.route('/api/v1/client/')

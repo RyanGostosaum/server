@@ -33,7 +33,8 @@ clientController.someUsers = (req, res) => {
 
 clientController.newUser = (req, res) => {
 
-    console.log('ok!');
+    console.log('ok!' + '\n');
+    console.log(req.body);
 
     modelUser.findOne({
             'name': req.body.name
@@ -52,14 +53,12 @@ clientController.newUser = (req, res) => {
             } else {
 
                 var client = new modelUser({
-                    name: req.body.name,
-                    phone: req.body.phone,
-                    email: req.body.email,
-                    birth: req.body.birth,
-                    street: req.body.street,
-                    ngh: req.body.ngh,
-                    city: req.body.city,
-                    modified: req.body.modified
+                    name: req.body.user.name,
+                    phone: req.body.user.phone,
+                    email: req.body.user.email,
+                    birth: req.body.user.birth,
+                    addr: req.body.user.addr,
+                    modified: req.body.user.modified
                 })
 
                 console.log(JSON.stringify(client) + ' São os inputs');

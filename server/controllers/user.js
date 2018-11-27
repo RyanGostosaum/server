@@ -43,7 +43,7 @@ UserController.login = (req, res, err) => {
                             userId: user._id,
                         },
                         'secret', {
-                            expiresIn: '1h'
+                            expiresIn: '10h'
                         }
                     )
 

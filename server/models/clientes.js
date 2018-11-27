@@ -22,14 +22,7 @@ const ClientSchema = new Schema({
     birth: {
         type: String,
     },
-    street: {
-        type: String
-    },
-    //bairro
-    ngh: {
-        type: String
-    },
-    city: {
+    addr: {
         type: String
     },
     phone: {
