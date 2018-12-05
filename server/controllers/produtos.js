@@ -122,4 +122,10 @@ productController.deleteProducts = (req, res) => {
 
 }
 
+productController.countProducts = (req, res) => {
+
+    productModel.count({}).exec()
+    .then(console.log())
+}
+
 module.exports = productController;
