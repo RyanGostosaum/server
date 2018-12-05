@@ -11,9 +11,11 @@ const helmet  = require('helmet')
 
 module.exports = () => {
 
+    require('dotenv').config()
+
     const app = express();
 
-    app.set('port', (process.env.PORT || 3000));
+    app.set('port', (process.env.PORT));
 
     app.use(bodyParser.urlencoded({
         extended: true

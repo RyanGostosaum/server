@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "author": "Ryan",
   "license": "ISC",
@@ -15,6 +16,7 @@
     "consign": "^0.1.6",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.5",
+    "dotenv-safe": "^6.1.0",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "helmet": "^3.15.0",

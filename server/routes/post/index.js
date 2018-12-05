@@ -32,7 +32,7 @@ routes.use(bodyParser.text({
 routes.route('/', checkAuth)
     .post(fileController.upload)
 
-routes.get('/api/v1/secret', checkAuth, (req, res) => {
+routes.get('/api/v1/secret', (req, res) => {
     res.send('hello secret world!')
 });
 

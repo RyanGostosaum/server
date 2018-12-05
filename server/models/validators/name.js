@@ -4,7 +4,7 @@ const nameValidator = [
     validate({
         validator: 'isLength',
         arguments: [2, 50],
-        message: 'Name should be between {ARGS[0]} and {ARGS[1]} characters',
+        message: 'Nome precisa estar entre {ARGS[0]} e {ARGS[1]} chars',
     })
 ]
 
