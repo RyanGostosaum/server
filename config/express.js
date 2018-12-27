@@ -9,11 +9,14 @@ const session = require('express-session');
 const routes = require('../server/routes/post/index');
 const helmet  = require('helmet')
 
+
 module.exports = () => {
 
+    require('dotenv').config()
+    
     const app = express();
 
-    app.set('port', (process.env.PORT || 3000));
+    app.set('port', (process.env.PORT /*|| 3001 */));
 
     app.use(bodyParser.urlencoded({
         extended: true
@@ -42,9 +45,9 @@ module.exports = () => {
     consign({
             cwd: '../server'
         })
-        .include('models')
-        .include('controllers')
-        .then('routes')
+        .include('/models/')
+        .include('/controllers/')
+        .then('/routes/')
 
         .into(app);
 

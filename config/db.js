@@ -4,7 +4,9 @@ mongoose.Promise = global.Promise;
 
 const moment = new Date
 
-mongoose.connect('mongodb://localhost:27017')
+require('dotenv').config()
+
+mongoose.connect(process.env.DB)
 
 mongoose.connection.on('connected', () => {
     console.log('logado as: ' + moment);

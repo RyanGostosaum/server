@@ -19,6 +19,8 @@ UserController.allUsers = (req, res) => {
 
 UserController.login = (req, res, err) => {
 
+    console.log(req.body)
+
     UserModel.findOne({
             username: req.body.username
         })
@@ -27,9 +29,11 @@ UserController.login = (req, res, err) => {
 
             if (user.length < 1) {
 
+                console.log('Deu ruim demais');
                 return res.json({
-                    message: 'Username não encontrado ;('
 
+                    message: 'Username não encontrado ;(',
+                    success: false
                 });
 
             }
@@ -43,19 +47,23 @@ UserController.login = (req, res, err) => {
                             userId: user._id,
                         },
                         'secret', {
-                            expiresIn: '10h'
+                            expiresIn: '1h'
                         }
                     )
 
                     return res.json({
                         message: 'Auth Success',
-                        token: token
+                        success: true,
+                        token: token,
+                        status: 200
                     })
 
                 } else {
 
                     return res.json({
-                        message: 'Auth fail'
+                        message: 'Auth fail',
+                        status: 400,
+                        success: false
                     })
                 }
 
@@ -64,8 +72,9 @@ UserController.login = (req, res, err) => {
         .catch(err => res.json({
 
             message: 'Auth fail',
-            erro: err
-
+            erro: err,
+            status: 400,
+            success: false
         }))
 }
 

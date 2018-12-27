@@ -5,7 +5,6 @@ const validator = require('./validators/index');
 const Schema = mongoose.Schema;
 
 //TODO: Start validation with mongoose-validator
-// ! You also need to finish the products system
 
 const time = new Date
 const day = time.getDate() + '/' + time.getMonth() + '/' + time.getFullYear()
@@ -19,8 +18,9 @@ const ClientSchema = new Schema({
     email: {
         type: String
     },
-    birth: {
+    cnpj: {
         type: String,
+        required: true
     },
     addr: {
         type: String
@@ -29,13 +29,13 @@ const ClientSchema = new Schema({
         type: Number,
         required: true
     },
-    defaulting: {
-        type: Boolean
+    account: {
+        type: Array
     },
     modified: {
         type: String,
         default: day
-    }
+    }, 
 });
 
 
