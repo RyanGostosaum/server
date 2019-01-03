@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
-
+const moment = require('moment')
 const Schema = mongoose.Schema;
 
-const time = new Date
-const day = time.getDate() + '/' + time.getMonth() + '/' + time.getFullYear()
+const day = moment("DD-MM-YYYY")
 
+const month = moment('MMM')
 const OrderSchema = new Schema({
     client: {
         type: String,
@@ -14,8 +14,12 @@ const OrderSchema = new Schema({
         type: String
     }, 
     dataRegistro: {
-        type: String,
+        type: Date,
         default: day
+    },
+    month: {
+        type: Date, 
+        default: month
     },
     prevent: {
         type: Boolean
