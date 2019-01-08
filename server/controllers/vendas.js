@@ -1,60 +1,60 @@
 const mongoose = require('mongoose');
 
-const ProductSchema = require('../models/produtos');
+const sellSchema = require('../models/vendas');
 
-const productModel = mongoose.model('Product');
+const sellModel = mongoose.model('sell');
 
-let productController = {}
+let sellController = {}
 
-productController.allProducts = (req, res) => {
+sellController.allSells = (req, res) => {
 
-    productModel.find()
+    sellModel.find()
         .then(results => res.json(results))
         .catch(err => res.json(err));
 
 }
 
-productController.someProducts = (req, res) => {
-    
-    productModel.find({'code': req.query.id })
+sellController.someSells = (req, res) => {
+
+    sellModel.findById(req.query.cod)
         .then(results => res.json(results))
         .catch(err => res.json({
-            message: 'Produto não encontrado',
+            message: 'Venda nao encontrada',
             status: 400,
             err: err
         }))
 
 }
 
-productController.newProducts = (req, res) => {
+sellController.newSells = (req, res) => {
 
     console.log(req.body)
-    productModel.findOne({
-            'code': req.body.cod
-        })
+    sellModel.findById(req.body.cod)
 
-        .then(product => {
+        .then(sell => {
 
-            if (product) {
+            if (sell) {
 
                 res.json({
 
                     success: false,
-                    message: 'Produto já foi cadastrado',
+                    message: 'Essa venda ja foi realizada, algo de errado aconteceu',
                     status: 400
-                });
-            } else {
 
-                var product = new productModel({
+                });
+
+            } else {
+                //todo 
+                var sell = new sellModel({
                     code: req.body.cod,
                     desc: req.body.desc,
                     price: req.body.price,
                     quant: req.body.quant
-
                 })
-                console.log(product);
 
-                product.save()
+                console.log(sell);
+
+                sell.save()
 
                     .then(() => res.json({
                         success: true,
@@ -71,22 +71,22 @@ productController.newProducts = (req, res) => {
         })
 }
 
-productController.updateProducts = (req, res) => {
+sellController.updateSells = (req, res) => {
 
-    console.log(req.body.quantidade);
+    console.log(req.body.quant);
 
-    productModel.findByIdAndUpdate(
+    sellModel.findByIdAndUpdate(
         req.params.id,
         req.body, {
             new: true
-        }, (err, product) => {
+        }, (err, sell) => {
 
-            if (product) {
+            if (sell) {
 
                 res.json({
 
                     message: 'Update feito!',
-                    date: product,
+                    date: sell,
                     status: 201
                 })
 
@@ -100,9 +100,9 @@ productController.updateProducts = (req, res) => {
     )
 }
 
-productController.deleteProducts = (req, res) => {
+sellController.deleteSells = (req, res) => {
 
-    productModel.findByIdAndRemove(req.params.id, (err, product) => {
+    sellModel.findByIdAndRemove(req.params.id, (err, sell) => {
 
         if (err) {
 
@@ -114,7 +114,7 @@ productController.deleteProducts = (req, res) => {
         } else {
             res.json({
                 message: 'Produto deletado',
-                data: product,
+                data: sell,
                 status: 201
             })
         }
@@ -123,9 +123,9 @@ productController.deleteProducts = (req, res) => {
 
 }
 
-productController.countProducts = (req, res) => {
+sellController.countOpenSells = (req, res) => {
 
-    productModel.count({}, (err, count) => {
+    sellModel.count({'state': 'open'}, (err, count) => {
         if(!err) {
             res.json({
                 count: count, 
@@ -133,10 +133,12 @@ productController.countProducts = (req, res) => {
             })
         } else {
             res.json({
-                err: err
+                err: err,
+                success: false
             })
         }
     })
+        
 }
 
-module.exports = productController;
+module.exports = sellController;

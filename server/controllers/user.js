@@ -18,6 +18,8 @@ UserController.allUsers = (req, res) => {
 }
 
 UserController.login = (req, res, err) => {
+    console.log('waiting..')
+    console.log(req.body)
 
     UserModel.findOne({
             username: req.body.username
@@ -29,7 +31,6 @@ UserController.login = (req, res, err) => {
 
                 return res.json({
                     message: 'Username não encontrado ;('
-
                 });
 
             }
@@ -49,7 +50,8 @@ UserController.login = (req, res, err) => {
 
                     return res.json({
                         message: 'Auth Success',
-                        token: token
+                        token: token, 
+                        success: true
                     })
 
                 } else {
@@ -71,7 +73,7 @@ UserController.login = (req, res, err) => {
 
 UserController.newUser = (req, res) => {
 
-    console.log(req.body);
+    console.log(req.body.username);
 
     if (req.body.username && req.body.password) {
 
@@ -80,12 +82,12 @@ UserController.newUser = (req, res) => {
             })
 
             .then(user => {
-
                 if (user) {
                     res.json({
 
                         success: false,
-                        message: 'Esse username não está disponível'
+                        message: 'Esse username não está disponível',
+                        status: 400
 
                     })
                 } else {

@@ -1,8 +1,8 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const ClientSchema = require('../models/clientes')
+const ClientSchema = require("../models/clientes");
 
-const modelUser = mongoose.model('Client');
+const modelUser = mongoose.model("Client");
 
 /*
     Crud começa aqui, os controllers definem as ações de cada rota
@@ -11,86 +11,94 @@ const modelUser = mongoose.model('Client');
 let clientController = {};
 
 clientController.allUsers = (req, res) => {
+    console.log("Buscando...");
 
-    console.log('Buscando...');
-
-    modelUser.find()
+    modelUser
+        .find()
         .then(results => res.json(results))
         .catch(err => res.send(err));
-}
+};
 
 clientController.someUsers = (req, res) => {
 
-    console.log('Buscando...' + req.params);
+    modelUser
+        .findOne({
+            'name': req.query.name
+        })
+        .then(results => {
+            if (results.length > 0) {
+                console.log(' n ok');
+            } else {
 
-    modelUser.findById(req.params.id)
-        .then(results => res.json(results))
-        .catch(err => res.json({
-            message: 'Cliente não encontrado',
-            status: 400
-        }));
-}
+                console.log(results);
+                res.json({
+                    results,
+                    success: true
+                })
+            }
+
+        })
+        .catch(err =>
+            res.json({
+                message: "Cliente não encontrado",
+                status: 400
+            })
+        );
+};
 
 clientController.newUser = (req, res) => {
-
-    console.log('ok!' + '\n');
+    console.log("ok!" + "\n");
     console.log(req.body);
 
-    modelUser.findOne({
-            'name': req.body.name
+    modelUser
+        .findOne({
+            name: req.body.name
         })
         .then(user => {
 
             if (user) {
-
                 res.json({
-
                     success: false,
-                    message: 'Esse nome já está cadastrado'
-
+                    message: "Esse nome já está cadastrado",
+                    status: 400
+                });
+            } else {
+                var client = new modelUser({
+                    name: req.body.name,
+                    phone: req.body.phone,
+                    email: req.body.email,
+                    birth: req.body.birth,
+                    addr: req.body.addr,
+                    modified: req.body.modified
                 });
 
-            } else {
+                console.log(JSON.stringify(client) + " São os inputs");
 
-                var client = new modelUser({
-                    name: req.body.user.name,
-                    phone: req.body.user.phone,
-                    email: req.body.user.email,
-                    birth: req.body.user.birth,
-                    addr: req.body.user.addr,
-                    modified: req.body.user.modified
-                })
+                client
+                    .save()
 
-                console.log(JSON.stringify(client) + ' São os inputs');
-                // Joi.validate(client, validatorClient, (err, value) => {
+                    .then(() =>
+                        res.json({
+                            success: true,
+                            message: "Cliente registrado!",
+                            statusCode: 201
+                        })
+                    )
 
-
-
-                client.save()
-
-                    .then(() => res.json({
-                        success: true,
-                        message: 'Cliente registrado!',
-                        statusCode: 201
-                    }))
-
-                    .catch(err => res.json({
-                        success: false,
-                        message: err,
-                        statusCode: 500
-
-                    }));
+                    .catch(err =>
+                        res.json({
+                            success: false,
+                            message: err,
+                            statusCode: 500
+                        })
+                    );
             }
-
-            //      })
-
-
-        })
-}
+        });
+};
 
 clientController.updateUsers = (req, res) => {
-    console.log('Buscando o put...');
-    console.log(req.body)
+    console.log("Buscando o put...");
+    console.log(req.body);
     console.log(req.params);
 
     modelUser.findByIdAndUpdate(
@@ -99,59 +107,55 @@ clientController.updateUsers = (req, res) => {
             new: true
         },
         (err, user) => {
-
             if (user) {
-
-
                 res.json({
-
-                    message: 'Update feito!',
+                    message: "Update feito!",
                     data: user,
                     statusCode: 201
-
-                })
-
+                });
             } else {
-
                 res.json({
-
-                    message: 'Error',
+                    message: "Error",
                     statusCode: 404
-
-                })
+                });
             }
         }
-    )
-
-}
+    );
+};
 
 clientController.deleteUsers = (req, res) => {
-
     console.log(req.params);
 
     modelUser.findByIdAndRemove(req.params.id, (err, user) => {
-
         if (err) {
-
             res.json({
-
-                message: 'Error',
+                message: "Error",
                 statusCode: 400
-
-            })
-
+            });
         } else {
-
             res.json({
-
                 message: "Cliente deletado",
                 data: user._id,
                 statusCode: 201
+            });
+        }
+    });
+};
 
+clientController.countClients = (req, res) => {
+
+    modelUser.count({}, (count, err) => {
+        if(!err) {
+            res.json({
+                count: count, 
+                success: true
+            })
+        } else {
+            res.json({
+                err: err
             })
         }
     })
-
 }
 
 // ! Crud básico termina aqui

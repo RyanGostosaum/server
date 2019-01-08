@@ -2,34 +2,32 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema;
 
+const moment = require('moment')
+
+var day = moment().format("DD/MM/YY")
+
 const ProductSchema = new Schema({
     code: {
         type: String,
         required: true,
     },
-    nome: {
+    desc: {
         type: String,
         required: true
     },
     date: {
         type: String,
-        required: true
+        required: true,
+        default: day
     },
-    preco: {
+    price: {
         type: Number, 
-        default: 0,
+        default: 0.00,
     },
-    quantidade: {
+    quant: {
         type: Number,
-    },
-    marca: {
-        type: String
-    },
-
-    group: {
-        type: String,
-        default: 'Não definido'
     }
 });
+
 
 module.exports = mongoose.model.Product || mongoose.model('Product', ProductSchema)
