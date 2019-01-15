@@ -9,51 +9,68 @@ var month = moment().format('MMM')
 var year = moment().format(`YYYY`)
 
 var fullDate = moment().format("DD/MM/YY")
-
 const sellSchema = new Schema({
 
     cliente: {
-        type: String,
-        required: true
+        name: {
+            type: String
+        },
+        phone: {
+            type: String
+        }, 
+        id: {
+            type: String
+        }
     },
-    produto: {
-
+    produto: [{
         code: {
             type: String
         },
-        quantidade: {
-            type: Number
-        },
         valor: {
             type: Number
+        },
+        desc: {
+            type: String
         }
-    },
-    valor: {
-        type: Number
-    },
+    }],
     date: {
         day: {
-            type: Date, 
+            type: String,
             default: day
         },
         month: {
-            type: Date, 
+            type: String,
             default: month
         },
         year: {
-            type: Date, 
+            type: Date,
             default: year
         },
         fullDate: {
-            type: Date, 
+            type: String,
             default: fullDate
         }
     },
     state: {
         type: String,
         default: 'open'
+    },
+    valor: {
+        type: Number
+    },
+    pagamento: {
+        mode: {
+            type: String
+        },
+        parcelas: {
+            type: Number,
+            default: 1
+        },
+        date: {
+            type: String, 
+            default: fullDate
+        }
     }
-
 });
 
 module.exports = mongoose.model.sell || mongoose.model('sell', sellSchema)

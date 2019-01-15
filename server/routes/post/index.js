@@ -66,8 +66,11 @@ routes.route('/api/v1/products/')
 | Sell api, collect products, should process on Front-End and return the value for db
 |--------------------------------------------------
 */
+routes.route('/api/v1/sell-products/')
+    .get(productController.sellProducts)
+
 routes.route('/api/v1/sells')
-    .get(checkAuth, sellController.allSells)
+    .get(sellController.allSells)
     .post(checkAuth, sellController.newSells)
 
 // ? query
@@ -90,4 +93,11 @@ routes.route('/api/v1/count/clients')
 routes.route('/api/v1/count/open-sells')
     .get(checkAuth, sellController.countOpenSells)
 
+//* Sells 
+
+routes.route('/api/v1/count-sells')
+    .get(sellController.countDataSells)
+
+routes.route('/api/v1/values')
+    .get(sellController.findSellsByDate)
 module.exports = routes

@@ -15,9 +15,60 @@ productController.allProducts = (req, res) => {
 }
 
 productController.someProducts = (req, res) => {
-    
-    productModel.find({'code': req.query.id })
-        .then(results => res.json(results))
+
+    console.log(req.query)
+    productModel.findOne({
+            'code': req.query.code
+        })
+        .then(results => {
+            console.log(results)
+            res.json({
+                success: true,
+                results
+            })
+        })
+        .catch(err => res.json({
+            message: 'Produto não encontrado',
+            status: 400,
+            err: err
+        }))
+
+}
+
+productController.sellProducts = (req, res) => {
+
+    console.log(req.query)
+
+    productModel.findOne({
+            'code': req.query.code
+        })
+        .then(results => {
+            console.log(results)
+            const price = req.query.quant * results.price
+            if(req.query.quant > results.quant) {
+                res.json({
+                    success: true,
+                    date: results.date,
+                    price: price,
+                    quantReq: req.query.quant,
+                    initialPrice: results.price,
+                    id: results.id,
+                    code: results.code,
+                    desc: results.desc,
+                    message: "Quantidade requisitada é maior que o estoque..."
+                })
+            }
+            res.json({
+                success: true,
+                date: results.date,
+                price: price,
+                id: results.id,
+                initialPrice: results.price,
+                code: results.code,
+                desc: results.desc,
+                quantReq: req.query.quant
+            })
+        })
         .catch(err => res.json({
             message: 'Produto não encontrado',
             status: 400,
@@ -28,7 +79,6 @@ productController.someProducts = (req, res) => {
 
 productController.newProducts = (req, res) => {
 
-    console.log(req.body)
     productModel.findOne({
             'code': req.body.cod
         })
@@ -126,9 +176,9 @@ productController.deleteProducts = (req, res) => {
 productController.countProducts = (req, res) => {
 
     productModel.count({}, (err, count) => {
-        if(!err) {
+        if (!err) {
             res.json({
-                count: count, 
+                count: count,
                 success: true
             })
         } else {

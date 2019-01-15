@@ -28,47 +28,52 @@ sellController.someSells = (req, res) => {
 
 sellController.newSells = (req, res) => {
 
-    console.log(req.body)
-    sellModel.findById(req.body.cod)
+    var client = req.body.client
+    var product = req.body.products
+    var pagamento = req.body.pagamento
+    var total = req.body.total
+    var quant = req.body.sellQuant
+    var value = product.price / product.quantReq
 
-        .then(sell => {
-
-            if (sell) {
-
-                res.json({
-
-                    success: false,
-                    message: 'Essa venda ja foi realizada, algo de errado aconteceu',
-                    status: 400
-
-                });
-
-            } else {
-                //todo 
-                var sell = new sellModel({
-                    code: req.body.cod,
-                    desc: req.body.desc,
-                    price: req.body.price,
-                    quant: req.body.quant
-                })
-
-                console.log(sell);
-
-                sell.save()
-
-                    .then(() => res.json({
-                        success: true,
-                        message: 'Produto registrado',
-                        status: 201
-                    }))
-
-                    .catch(err => res.json({
-                        success: false,
-                        message: err,
-                        status: 500
-                    }))
+    if (req.body) {
+        //todo 
+        var sell = new sellModel({
+            cliente: {
+                name: client.name,
+                phone: client.phone,
+                id: client._id
+            },
+            produto: product,
+            valor: total,
+            pagamento: {
+                mode: pagamento
             }
+
         })
+
+        console.log(sell);
+
+        sell.save()
+
+            .then(() => res.json({
+                success: true,
+                message: 'Produto registrado',
+                status: 201
+            }))
+
+            .catch(err => res.json({
+                success: false,
+                message: err,
+                status: 500
+            }))
+    } else {
+        res.json({
+            success: false,
+            message: 'Nenhum dado fornecido'
+        })
+
+    }
+
 }
 
 sellController.updateSells = (req, res) => {
@@ -125,10 +130,12 @@ sellController.deleteSells = (req, res) => {
 
 sellController.countOpenSells = (req, res) => {
 
-    sellModel.count({'state': 'open'}, (err, count) => {
-        if(!err) {
+    sellModel.count({
+        'state': 'open'
+    }, (err, count) => {
+        if (!err) {
             res.json({
-                count: count, 
+                count: count,
                 success: true
             })
         } else {
@@ -138,7 +145,106 @@ sellController.countOpenSells = (req, res) => {
             })
         }
     })
-        
+
+}
+sellController.countDataSells = (req, res) => {
+
+    console.log(req.query)
+
+    if (req.query.type === 'month') {
+        console.log('Type is month');
+        sellModel.count({
+            'date.month': req.query.data
+        }, (err, count) => {
+            if (!err) {
+                res.json({
+                    count: count,
+                    success: true,
+                    type: 'month'
+                })
+            } else {
+                res.json({
+                    err: err,
+                    success: false
+                })
+            }
+        })
+    }
+    if (req.query.type === 'day') {
+
+        console.log('Type is Day');
+        sellModel.count({
+            'date.day': req.query.data
+        }, (err, count) => {
+            if (!err) {
+                res.json({
+                    count: count,
+                    success: true,
+                    type: 'day'
+                })
+            } else {
+                res.json({
+                    err: err,
+                    success: false
+                })
+            }
+        })
+
+    }
+
+}
+sellController.findSellsByDate = (req, res) => {
+
+    console.log(req.query)
+
+    if (req.query.type === 'day') {
+
+        console.log('Type is Day');
+
+        sellModel.find({
+                'date.day': req.query.data
+            })
+            .then((result) => {
+                const value = result
+                console.log(result)
+
+                res.json({
+                    value: result.valor,
+                    success: true,
+                    type: 'day'
+                })
+            }).catch((err) => {
+                    console.log(err);
+                }
+
+            );
+
+    }
+    if (req.query.type === 'month') {
+
+        console.log('Type is Month');
+
+        sellModel.find({
+                'date.month': req.query.data
+            })
+            .then((result) => {
+
+                console.log(result)
+
+                res.json({
+                    value: result.valor,
+                    state: result.state,
+                    success: true,
+                    type: 'day'
+                })
+            }).catch((err) => {
+                    console.log(err);
+                }
+
+            );
+
+    }
+
 }
 
 module.exports = sellController;
