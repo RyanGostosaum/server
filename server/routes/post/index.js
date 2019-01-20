@@ -45,20 +45,20 @@ routes.route('/api/v1/client/')
     .get(checkAuth, clientController.allUsers)
     .post(checkAuth, clientController.newUser)
 
-routes.route('/api/v1/clients/')
+routes.route('/api/v1/clients')
     .get(checkAuth, clientController.someUsers)
-    .put(checkAuth, clientController.updateUsers)
+    .put(clientController.updateUsers)
     .delete(checkAuth, clientController.deleteUsers);
 
 //? Routes to Products Post, Get, Delete and Put methods
 routes.route('/api/v1/product')
-    .get(productController.allProducts)
-    .post(productController.newProducts)
+    .get(checkAuth, productController.allProducts)
+    .post(checkAuth, productController.newProducts)
 
 // Aqui tem controllers que aceitam o parametro query
-routes.route('/api/v1/products/')
+routes.route('/api/v1/products')
     .get(checkAuth, productController.someProducts)
-    .put(checkAuth, productController.updateProducts)
+    .put(productController.updateProducts)
     .delete(checkAuth, productController.deleteProducts)
 
 /**
@@ -66,17 +66,19 @@ routes.route('/api/v1/products/')
 | Sell api, collect products, should process on Front-End and return the value for db
 |--------------------------------------------------
 */
-routes.route('/api/v1/sell-products/')
-    .get(productController.sellProducts)
+routes.route('/api/v1/sell-products')
+    .get(checkAuth, productController.sellProducts)
 
 routes.route('/api/v1/sells')
-    .get(sellController.allSells)
+    .get(checkAuth, sellController.allSells)
     .post(checkAuth, sellController.newSells)
 
+routes.route('/api/v1/closed-sells')
+    .get(checkAuth, sellController.allClosedSells)
 // ? query
-routes.route('/api/v1/sell/')
+routes.route('/api/v1/sell')
     .get(checkAuth, sellController.someSells)
-    .put(checkAuth, sellController.updateSells)
+    .put(sellController.updateSells)
     .delete(checkAuth, sellController.deleteSells)
 
 routes.route('/api/v1/admin')
@@ -92,12 +94,18 @@ routes.route('/api/v1/count/clients')
     .get(checkAuth, clientController.countClients)
 routes.route('/api/v1/count/open-sells')
     .get(checkAuth, sellController.countOpenSells)
+routes.route('/api/v1/count/close-sells')
+    .get(checkAuth, sellController.countClosedSells)
 
 //* Sells 
 
 routes.route('/api/v1/count-sells')
-    .get(sellController.countDataSells)
+    .get(checkAuth, sellController.countDataSells)
 
 routes.route('/api/v1/values')
-    .get(sellController.findSellsByDate)
+    .get(checkAuth, sellController.findSellsByDate)
+
+routes.route('/api/v1/today-values')
+    .get(checkAuth, sellController.todaySales)
+
 module.exports = routes

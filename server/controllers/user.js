@@ -18,8 +18,6 @@ UserController.allUsers = (req, res) => {
 }
 
 UserController.login = (req, res, err) => {
-    console.log('waiting..')
-    console.log(req.body)
 
     UserModel.findOne({
             username: req.body.username
@@ -73,7 +71,6 @@ UserController.login = (req, res, err) => {
 
 UserController.newUser = (req, res) => {
 
-    console.log(req.body.username);
 
     if (req.body.username && req.body.password) {
 
@@ -104,7 +101,6 @@ UserController.newUser = (req, res) => {
                                 isAdmin: req.body.isAdmin
                             });
 
-                            console.log(user);
 
                             user.save()
 
@@ -132,7 +128,7 @@ UserController.newUser = (req, res) => {
 
 UserController.deleteUser = (req, res) => {
 
-    UserModel.findOneAndRemove(req.body.username, (err, user) => {
+    UserModel.findByIdAndRemove(req.query.id, (err, user) => {
 
         if (err) {
 

@@ -1,42 +1,87 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const sellSchema = require('../models/vendas');
+const sellSchema = require("../models/vendas");
 
-const sellModel = mongoose.model('sell');
+const sellModel = mongoose.model("sell");
 
-let sellController = {}
+const moment = require("moment");
+
+let sellController = {};
+
+var fullDate = moment().format("DD/MM/YY");
 
 sellController.allSells = (req, res) => {
-
-    sellModel.find()
-        .then(results => res.json(results))
+    sellModel
+        .find({
+            'state': "open"
+        })
+        .then(results => {
+            res.json(results);
+        })
+        .catch(err => res.json(err));
+};
+sellController.allClosedSells = (req, res) => {
+    sellModel
+        .find({
+            'state': "closed"
+        })
+        .then(results => {
+            res.json(results);
+        })
         .catch(err => res.json(err));
 
-}
+};
 
 sellController.someSells = (req, res) => {
-
-    sellModel.findById(req.query.cod)
+    sellModel
+        .findById(req.query.id)
         .then(results => res.json(results))
-        .catch(err => res.json({
-            message: 'Venda nao encontrada',
-            status: 400,
-            err: err
-        }))
+        .catch(err =>
+            res.json({
+                message: "Venda nao encontrada",
+                status: 400,
+                err: err
+            })
+        );
+};
 
-}
-
+// ! IMPORTANT
 sellController.newSells = (req, res) => {
+    var client = req.body.client;
+    var product = req.body.products;
+    var pagamento = req.body.pagamento;
+    var total = req.body.total;
+    var quant = req.body.sellQuant;
+    var value = product.price / product.quantReq;
 
-    var client = req.body.client
-    var product = req.body.products
-    var pagamento = req.body.pagamento
-    var total = req.body.total
-    var quant = req.body.sellQuant
-    var value = product.price / product.quantReq
+    if (pagamento = 'vista') {
+        var parcelas = 1
+    }
+    if (pagamento = 'cartao1') {
+        var parcelas = 1
+    }
+    if (pagamento = 'cartao2') {
+        var parcelas = 2
+    }
+    if (pagamento = 'cartao3') {
+        var parcelas = 3
+    }
+    if (pagamento = 'cartao4') {
+        var parcelas = 4
+    }
+    if (pagamento = 'cartao5') {
+        var parcelas = 5
+    }
+    if (pagamento = 'cartao6') {
+        var parcelas = 6
+    }
+    if (pagamento = 'cheque') {
+        var parcelas = 1
+    }
 
+    console.log(parcelas);
     if (req.body) {
-        //todo 
+        //todo
         var sell = new sellModel({
             cliente: {
                 name: client.name,
@@ -46,205 +91,222 @@ sellController.newSells = (req, res) => {
             produto: product,
             valor: total,
             pagamento: {
-                mode: pagamento
+                mode: pagamento,
+                parcelas: parcelas
             }
+        });
+        // console.log(sell);
+        sell
+            .save()
 
-        })
+            .then(() =>
+                res.json({
+                    success: true,
+                    message: "Venda registrada!",
+                    status: 201
+                })
+            )
 
-        console.log(sell);
-
-        sell.save()
-
-            .then(() => res.json({
-                success: true,
-                message: 'Produto registrado',
-                status: 201
-            }))
-
-            .catch(err => res.json({
-                success: false,
-                message: err,
-                status: 500
-            }))
+            .catch(err =>
+                res.json({
+                    success: false,
+                    message: err,
+                    status: 500
+                })
+            );
     } else {
         res.json({
             success: false,
-            message: 'Nenhum dado fornecido'
-        })
-
+            message: "Nenhum dado fornecido"
+        });
     }
-
-}
+};
 
 sellController.updateSells = (req, res) => {
-
-    console.log(req.body.quant);
-
     sellModel.findByIdAndUpdate(
-        req.params.id,
-        req.body, {
-            new: true
-        }, (err, sell) => {
-
-            if (sell) {
-
-                res.json({
-
-                    message: 'Update feito!',
-                    date: sell,
-                    status: 201
-                })
-
-            } else {
-                res.json({
-                    message: 'Error',
-                    status: 404
-                })
-            }
+        req.query.id, {
+            state: "closed"
+        },
+        (err, results) => {
+            if (err)
+                return res.status(500).send({
+                    success: false,
+                    err
+                });
+            res.json({
+                success: true,
+                results
+            });
         }
-    )
-}
+    );
+};
 
 sellController.deleteSells = (req, res) => {
-
-    sellModel.findByIdAndRemove(req.params.id, (err, sell) => {
-
+    //console.log(req.query.id);
+    sellModel.findByIdAndRemove(req.query.id, (err, sell) => {
         if (err) {
-
             res.json({
-                message: 'Error',
+                message: "Error",
                 status: 400
-            })
-
+            });
         } else {
             res.json({
-                message: 'Produto deletado',
+                message: "Venda deletada",
                 data: sell,
                 status: 201
-            })
+            });
         }
-
-    })
-
-}
+    });
+};
 
 sellController.countOpenSells = (req, res) => {
-
     sellModel.count({
-        'state': 'open'
-    }, (err, count) => {
-        if (!err) {
-            res.json({
-                count: count,
-                success: true
-            })
-        } else {
-            res.json({
-                err: err,
-                success: false
-            })
+            state: "open"
+        },
+        (err, count) => {
+            if (!err) {
+                res.json({
+                    count: count,
+                    success: true
+                });
+            } else {
+                res.json({
+                    err: err,
+                    success: false
+                });
+            }
         }
-    })
+    );
+};
 
-}
+sellController.countClosedSells = (req, res) => {
+    sellModel.count({
+            state: "closed"
+        },
+        (err, count) => {
+            if (!err) {
+                res.json({
+                    count: count,
+                    success: true
+                });
+            } else {
+                res.json({
+                    err: err,
+                    success: false
+                });
+            }
+        }
+    );
+};
 sellController.countDataSells = (req, res) => {
+    Array.prototype.sum = function (prop) {
+        var total = 0;
+        for (var i = 0, _len = this.length; i < _len; i++) {
+            total += this[i][prop];
+        }
+        return total;
+    };
 
-    console.log(req.query)
-
-    if (req.query.type === 'month') {
-        console.log('Type is month');
-        sellModel.count({
-            'date.month': req.query.data
-        }, (err, count) => {
-            if (!err) {
-                res.json({
-                    count: count,
-                    success: true,
-                    type: 'month'
-                })
-            } else {
-                res.json({
-                    err: err,
-                    success: false
-                })
-            }
+    sellModel
+        .find({
+            "date.month": req.query.month,
+            state: "closed"
         })
-    }
-    if (req.query.type === 'day') {
-
-        console.log('Type is Day');
-        sellModel.count({
-            'date.day': req.query.data
-        }, (err, count) => {
-            if (!err) {
-                res.json({
-                    count: count,
-                    success: true,
-                    type: 'day'
-                })
-            } else {
-                res.json({
-                    err: err,
-                    success: false
-                })
-            }
+        .then(result => {
+            var value = result.sum("valor");
+            res.json({
+                value: value,
+                success: true
+            });
         })
+        .catch(err => {
+            res.json(err);
+        });
+};
 
-    }
-
-}
 sellController.findSellsByDate = (req, res) => {
+    Array.prototype.sum = function (prop) {
+        var total = 0;
+        for (var i = 0, _len = this.length; i < _len; i++) {
+            total += this[i][prop];
+        }
+        return total;
+    };
 
-    console.log(req.query)
+    if (req.query.type === "day") {
+        //console.log("Type is Day");
 
-    if (req.query.type === 'day') {
-
-        console.log('Type is Day');
-
-        sellModel.find({
-                'date.day': req.query.data
+        sellModel
+            .find({
+                "date.day": req.query.data,
+                state: "closed"
             })
-            .then((result) => {
-                const value = result
-                console.log(result)
+            .then(result => {
+                const value = result.sum("valor");
 
                 res.json({
-                    value: result.valor,
+                    value: value,
                     success: true,
-                    type: 'day'
-                })
-            }).catch((err) => {
-                    console.log(err);
-                }
-
-            );
-
-    }
-    if (req.query.type === 'month') {
-
-        console.log('Type is Month');
-
-        sellModel.find({
-                'date.month': req.query.data
+                    type: "day"
+                });
             })
-            .then((result) => {
+            .catch(err => {
+                console.log(err);
+                res.json(err)
+            });
+    }
+    if (req.query.type === "month") {
+        //console.log("Type is Month");
 
-                console.log(result)
+        sellModel
+            .find({
+                "date.month": req.query.data,
+                state: "closed"
+            })
+            .then(result => {
+                var value = result.sum("valor");
+                //console.log(value)
 
                 res.json({
-                    value: result.valor,
+                    value: value,
                     state: result.state,
                     success: true,
-                    type: 'day'
-                })
-            }).catch((err) => {
-                    console.log(err);
-                }
-
-            );
-
+                    type: "day"
+                });
+            })
+            .catch(err => {
+                //console.log(err);
+            });
     }
+};
+sellController.todaySales = (req, res) => {
+    Array.prototype.sum = function (prop) {
+        var total = 0;
+        for (var i = 0, _len = this.length; i < _len; i++) {
+            total += this[i][prop];
+        }
+        return total;
+    };
 
-}
+    sellModel
+        .find({
+            "date.fullDate": fullDate,
+            state: "closed"
+        })
+        .then(result => {
+            //console.log(result);
+            const value = result.sum("valor");
+
+            res.json({
+                value: value,
+                success: true,
+                type: "day"
+            });
+        })
+        .catch(err => {
+            //console.log(err);
+            res.json(err)
+        });
+};
 
 module.exports = sellController;

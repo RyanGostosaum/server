@@ -6,7 +6,7 @@ moment.locale("pt-br")
 
 var day = moment().format('dddd')
 var month = moment().format('MMM')
-var year = moment().format(`YYYY`)
+var year = moment().format(`YY`)
 
 var fullDate = moment().format("DD/MM/YY")
 const sellSchema = new Schema({
@@ -31,6 +31,12 @@ const sellSchema = new Schema({
         },
         desc: {
             type: String
+        }, 
+        quantReq: {
+            type: Number
+        }, 
+        initialQnt: {
+            type: Number
         }
     }],
     date: {
@@ -43,7 +49,7 @@ const sellSchema = new Schema({
             default: month
         },
         year: {
-            type: Date,
+            type: String,
             default: year
         },
         fullDate: {

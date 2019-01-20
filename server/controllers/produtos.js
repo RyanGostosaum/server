@@ -16,12 +16,10 @@ productController.allProducts = (req, res) => {
 
 productController.someProducts = (req, res) => {
 
-    console.log(req.query)
     productModel.findOne({
             'code': req.query.code
         })
         .then(results => {
-            console.log(results)
             res.json({
                 success: true,
                 results
@@ -37,18 +35,17 @@ productController.someProducts = (req, res) => {
 
 productController.sellProducts = (req, res) => {
 
-    console.log(req.query)
 
     productModel.findOne({
             'code': req.query.code
         })
         .then(results => {
-            console.log(results)
             const price = req.query.quant * results.price
-            if(req.query.quant > results.quant) {
+            if (req.query.quant > results.quant) {
                 res.json({
                     success: true,
                     date: results.date,
+                    initialQnt: results.quant,
                     price: price,
                     quantReq: req.query.quant,
                     initialPrice: results.price,
@@ -62,6 +59,7 @@ productController.sellProducts = (req, res) => {
                 success: true,
                 date: results.date,
                 price: price,
+                initialQnt: results.quant,
                 id: results.id,
                 initialPrice: results.price,
                 code: results.code,
@@ -100,9 +98,7 @@ productController.newProducts = (req, res) => {
                     desc: req.body.desc,
                     price: req.body.price,
                     quant: req.body.quant
-
                 })
-                console.log(product);
 
                 product.save()
 
@@ -123,36 +119,27 @@ productController.newProducts = (req, res) => {
 
 productController.updateProducts = (req, res) => {
 
-    console.log(req.body.quantidade);
-
-    productModel.findByIdAndUpdate(
-        req.params.id,
-        req.body, {
-            new: true
-        }, (err, product) => {
-
-            if (product) {
-
-                res.json({
-
-                    message: 'Update feito!',
-                    date: product,
-                    status: 201
-                })
-
-            } else {
-                res.json({
-                    message: 'Error',
-                    status: 404
-                })
-            }
-        }
-    )
+    console.log(req.body);
+    var product = req.body
+    productModel.findByIdAndUpdate(req.query.id, {
+        desc: product.desc, price: product.price, quant: product.quant
+    }, {
+        'quant': req.query.quant
+    }, (err, results) => {
+        if (err) return res.status(500).send({
+            success: false,
+            err
+        });
+        res.json({
+            success: true, 
+            results
+        })
+    })
 }
 
 productController.deleteProducts = (req, res) => {
 
-    productModel.findByIdAndRemove(req.params.id, (err, product) => {
+    productModel.findByIdAndRemove(req.query.id, (err, product) => {
 
         if (err) {
 

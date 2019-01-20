@@ -11,7 +11,6 @@ const modelUser = mongoose.model("Client");
 let clientController = {};
 
 clientController.allUsers = (req, res) => {
-    console.log("Buscando...");
 
     modelUser
         .find()
@@ -27,10 +26,8 @@ clientController.someUsers = (req, res) => {
         })
         .then(results => {
             if (results.length > 0) {
-                console.log(' n ok');
+                console.log('ERR');
             } else {
-
-                console.log(results);
                 res.json({
                     results,
                     success: true
@@ -47,8 +44,6 @@ clientController.someUsers = (req, res) => {
 };
 
 clientController.newUser = (req, res) => {
-    console.log("ok!" + "\n");
-    console.log(req.body);
 
     modelUser
         .findOne({
@@ -72,7 +67,6 @@ clientController.newUser = (req, res) => {
                     modified: req.body.modified
                 });
 
-                console.log(JSON.stringify(client) + " São os inputs");
 
                 client
                     .save()
@@ -97,20 +91,21 @@ clientController.newUser = (req, res) => {
 };
 
 clientController.updateUsers = (req, res) => {
-    console.log("Buscando o put...");
-    console.log(req.body);
-    console.log(req.params);
 
+    console.log(req.body);
+
+    var client = req.body
     modelUser.findByIdAndUpdate(
-        req.params.id,
-        req.body, {
-            new: true
+        req.query.id, {
+            name: client.nName,
+            email: client.nemail,
+            addr: client.naddr,
+            phone: client.nContact
         },
         (err, user) => {
             if (user) {
                 res.json({
                     message: "Update feito!",
-                    data: user,
                     statusCode: 201
                 });
             } else {
@@ -124,9 +119,9 @@ clientController.updateUsers = (req, res) => {
 };
 
 clientController.deleteUsers = (req, res) => {
-    console.log(req.params);
 
-    modelUser.findByIdAndRemove(req.params.id, (err, user) => {
+
+    modelUser.findByIdAndRemove(req.query.id, (err, user) => {
         if (err) {
             res.json({
                 message: "Error",
@@ -144,10 +139,10 @@ clientController.deleteUsers = (req, res) => {
 
 clientController.countClients = (req, res) => {
 
-    modelUser.count({}, (count, err) => {
-        if(!err) {
+    modelUser.count({}, (err, count) => {
+        if (!err) {
             res.json({
-                count: count, 
+                count: count,
                 success: true
             })
         } else {
