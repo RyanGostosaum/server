@@ -4,6 +4,7 @@ const ClientSchema = require("../models/clientes");
 
 const modelUser = mongoose.model("Client");
 
+
 /*
     Crud começa aqui, os controllers definem as ações de cada rota
 */

@@ -20,12 +20,30 @@ sellController.allSells = (req, res) => {
         })
         .catch(err => res.json(err));
 };
+
 sellController.allClosedSells = (req, res) => {
     sellModel
         .find({
             'state': "closed"
         })
         .then(results => {
+            res.json(results);
+        })
+        .catch(err => res.json(err));
+
+};
+
+sellController.allClosedSellsByDate = (req, res) => {
+
+    const date = req.query.date
+    const query = date.replace("20", '')
+    sellModel
+        .find({
+            'state': "closed", 
+            'date.fullDate': query
+        })
+        .then(results => {
+            //console.log(results);
             res.json(results);
         })
         .catch(err => res.json(err));
@@ -51,35 +69,6 @@ sellController.newSells = (req, res) => {
     var product = req.body.products;
     var pagamento = req.body.pagamento;
     var total = req.body.total;
-    var quant = req.body.sellQuant;
-    var value = product.price / product.quantReq;
-
-    if (pagamento = 'vista') {
-        var parcelas = 1
-    }
-    if (pagamento = 'cartao1') {
-        var parcelas = 1
-    }
-    if (pagamento = 'cartao2') {
-        var parcelas = 2
-    }
-    if (pagamento = 'cartao3') {
-        var parcelas = 3
-    }
-    if (pagamento = 'cartao4') {
-        var parcelas = 4
-    }
-    if (pagamento = 'cartao5') {
-        var parcelas = 5
-    }
-    if (pagamento = 'cartao6') {
-        var parcelas = 6
-    }
-    if (pagamento = 'cheque') {
-        var parcelas = 1
-    }
-
-    console.log(parcelas);
     if (req.body) {
         //todo
         var sell = new sellModel({
@@ -91,8 +80,7 @@ sellController.newSells = (req, res) => {
             produto: product,
             valor: total,
             pagamento: {
-                mode: pagamento,
-                parcelas: parcelas
+                mode: pagamento
             }
         });
         // console.log(sell);
@@ -227,6 +215,7 @@ sellController.countDataSells = (req, res) => {
 sellController.findSellsByDate = (req, res) => {
     Array.prototype.sum = function (prop) {
         var total = 0;
+
         for (var i = 0, _len = this.length; i < _len; i++) {
             total += this[i][prop];
         }
@@ -279,6 +268,8 @@ sellController.findSellsByDate = (req, res) => {
             });
     }
 };
+
+
 sellController.todaySales = (req, res) => {
     Array.prototype.sum = function (prop) {
         var total = 0;
