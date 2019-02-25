@@ -6,7 +6,7 @@ const consign = require('consign');
 const path = require('path');
 const cors = require('cors');
 const session = require('express-session');
-const routes = require('../server/routes/post/index');
+const routes = require('../server/routes/index');
 const helmet  = require('helmet')
 
 

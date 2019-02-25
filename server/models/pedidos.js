@@ -2,23 +2,27 @@ const mongoose = require('mongoose')
 const moment = require('moment')
 const Schema = mongoose.Schema;
 
-const day = moment("DD-MM-YYYY")
+const day = moment().format("DD/MM/YY")
 
-const month = moment('MMM')
+const month = moment().format('MMM')
+
+const today = new Date()
+
 const OrderSchema = new Schema({
     client: {
         type: String,
         required: true,
     },
-    clientID: {
+    clientId: {
         type: String
     }, 
-    dataRegistro: {
-        type: Date,
-        default: day
+    lastSeen: {
+        type: String,
+        default: day, 
+        unique: true
     },
     month: {
-        type: Date, 
+        type: String, 
         default: month
     },
     prevent: {
@@ -26,25 +30,31 @@ const OrderSchema = new Schema({
     },
     equip: [{
         equipamento: String,
-        serie: String
     }],
     aval: {
         type: String
     },
     peças: [{
-        cod: {
-            type: String
-        },
         nome: {
             type: String
         },
-        quant: {
-            type: Number
-        }
     }], 
     status: {
         type: String, 
         default: 'aberto'
+    }, 
+    finalDate: {
+        type: String
+    }, 
+    info: {
+        type: String, 
+        default: "Nada adicionado"
+    },
+    date: {
+        type: Date,
+    }, 
+    author: {
+        type: String
     }
 });
 

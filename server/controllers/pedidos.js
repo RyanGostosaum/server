@@ -10,57 +10,17 @@ orderController.allOrders = (req, res) => {
 
     orderModel.find()
         .then(results => res.json({
-            data: results
+            results
         }))
         .catch(err => res.json(err));
-
 }
 
-orderController.countOrders = (req, res) => {
-
-    orderModel.count({}, (err, count) => {
-        res.json({
-            orders: count, 
-            success: true
-        })
-    })
-}
-orderController.countOpenOrders = (req, res) => {
-
-    orderModel.where({'status': 'aberto'}).countDocuments((err, count) => {
-        if(err) {
-            res.json({
-                err: err, 
-                success: false
-            })
-        } else {
-            res.json({
-                count: count, 
-                success: true
-            })
-        }
-    })
-}
-orderController.countCloseOrders = (req, res) => {
-
-    orderModel.where({'status': 'finalizado'}).countDocuments((err, count) => {
-        if(err) {
-            res.json({
-                err: err, 
-                success: false
-            })
-        } else {
-            res.json({
-                count: count, 
-                success: true
-            })
-        }
-    })
-}
 orderController.someOrders = (req, res) => {
 
-    orderModel.findById(req.params.id)
-        .then(results => res.json(results))
+    orderModel.findById(req.query.id)
+        .then(results => {
+            res.json(results)
+        })
         .catch(err => res.json({
             message: 'Chamado não encontrado',
             status: 400,
@@ -69,14 +29,16 @@ orderController.someOrders = (req, res) => {
 }
 
 orderController.newOrders = (req, res) => {
-
     var order = new orderModel({
         clientId: req.body.client._id,
-        client: req.body.client.name, 
-        prevent: req.body.prevent, 
-        aval: req.body.obs, 
-        //pagamento:
+        client: req.body.client.name,
+        prevent: req.body.prevent,
+        aval: req.body.obs,
+        info: req.body.info,
+        date: new Date,
+        author: req.userData.username
     })
+
     order.save()
 
         .then(() => res.json({
@@ -91,15 +53,10 @@ orderController.newOrders = (req, res) => {
             status: 500
         }))
 }
-
 orderController.updateOrders = (req, res) => {
-
-    console.log(req.body.quantidade);
-
     orderModel.findByIdAndUpdate(
-        req.params.id,
-        req.body, {
-            new: true
+        req.query.id, {
+            status: 'finalizado'
         }, (err, order) => {
 
             if (order) {
@@ -123,7 +80,7 @@ orderController.updateOrders = (req, res) => {
 
 orderController.deleteOrders = (req, res) => {
 
-    orderModel.findByIdAndRemove(req.params.id, (err, order) => {
+    orderModel.findByIdAndRemove(req.query.id, (err, order) => {
 
         if (err) {
 

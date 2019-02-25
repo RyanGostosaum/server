@@ -47,7 +47,7 @@ UserController.login = (req, res, err) => {
                             userId: user._id,
                         },
                         'secret', {
-                            expiresIn: '1h'
+                            expiresIn: '8h'
                         }
                     )
 
@@ -79,9 +79,6 @@ UserController.login = (req, res, err) => {
 }
 
 UserController.newUser = (req, res) => {
-
-    console.log(req.body);
-
     if (req.body.username && req.body.password) {
 
         UserModel.findOne({
@@ -110,8 +107,6 @@ UserController.newUser = (req, res) => {
                                 password: cryptPass,
                                 isAdmin: req.body.isAdmin
                             });
-
-                            console.log(user);
 
                             user.save()
 

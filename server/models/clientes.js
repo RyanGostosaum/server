@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 //TODO: Start validation with mongoose-validator
 
 const time = new Date
-const day = time.getDate() + '/' + time.getMonth() + '/' + time.getFullYear()
+const day = time.toLocaleString();
 
 const ClientSchema = new Schema({
     name: {
