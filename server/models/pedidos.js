@@ -19,7 +19,6 @@ const OrderSchema = new Schema({
     lastSeen: {
         type: String,
         default: day, 
-        unique: true
     },
     month: {
         type: String, 
