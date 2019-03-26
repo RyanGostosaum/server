@@ -1,2 +1,6 @@
+
+#Deps
 /node_modules
+
+#Dev
 /*.env
