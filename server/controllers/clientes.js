@@ -4,6 +4,11 @@ const ClientSchema = require('../models/clientes')
 
 const modelUser = mongoose.model('Client');
 
+const OrderSchema = require('../models/pedidos');
+
+const orderModel = mongoose.model('Order');
+
+// Lets go
 let clientController = {};
 
 clientController.allUsers = (req, res) => {
@@ -23,7 +28,14 @@ clientController.someUsers = (req, res) => {
             'name': req.query.name
         })
         .then(results => {
-            res.json(results)
+            orderModel.find({'client': req.query.name}, (e, orders) => {
+                if (e)
+                throw e;
+                res.json({
+                    user: results, 
+                    order: orders
+                })
+            })
         })
         .catch(err => res.json({
             message: 'Cliente não encontrado',
