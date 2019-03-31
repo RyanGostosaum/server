@@ -4,37 +4,32 @@ const bodyParser = require('body-parser');
 //const upload = multer({ dest: '../../uploads' });
 const checkAuth = require('../middleware/check-auth')
 
-//? BP stuff
-// parse various different custom JSON types as JSON
+//? BP stuff parse various different custom JSON types as JSON
 routes.use(bodyParser.json())
-routes.use(bodyParser.urlencoded({
-    extended: false
-}));
+routes.use(bodyParser.urlencoded({extended: false}));
 // parse various different custom JSON types as JSON
-routes.use(bodyParser.json({
-    type: 'application/json'
-}))
+routes.use(bodyParser.json({type: 'application/json'}))
 
 // parse some custom thing into a Buffer
-routes.use(bodyParser.raw({
-    type: 'application/vnd.custom-type'
-}))
-
+routes.use(bodyParser.raw({type: 'application/vnd.custom-type'}))
 
 // parse an HTML body into a string
-routes.use(bodyParser.text({
-    type: 'text/html'
-}))
+routes.use(bodyParser.text({type: 'text/html'}))
 
 
-//! Login Auth with jwt
-routes.route('/login')
+routes
+    .route('/login')
     .post(userController.login)
 
+routes
+    .route('/register')
+    .post(userController.newUser)
 
 
-routes.route('/api/user')
+routes
+    .route('/api/user')
     .get(checkAuth, userController.allUsers)
-    .post(checkAuth, userController.newUser)
+    .put(userController.updateUser)
     .delete(checkAuth, userController.deleteUser)
+    
 module.exports = routes

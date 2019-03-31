@@ -9,7 +9,7 @@ require('dotenv').config()
 mongoose.connect(process.env.DB)
 
 mongoose.connection.on('connected', () => {
-    console.log('logado as: ' + moment);
+    console.log('logado as: ' + moment.toLocaleTimeString());
 })
 
 mongoose.connection.on('error', (err) => {

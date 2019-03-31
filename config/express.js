@@ -6,8 +6,9 @@ const consign = require('consign');
 const path = require('path');
 const cors = require('cors');
 const session = require('express-session');
-const routes = require('../server/routes/post/index');
-const helmet  = require('helmet')
+const formidableMiddleware = require('express-formidable');
+const routes = require('../server/routes/index');
+const helmet = require('helmet')
 
 module.exports = () => {
 
@@ -25,17 +26,20 @@ module.exports = () => {
 
     app.use(helmet());
 
+
+    // app.use(formidableMiddleware());
+
     app.use(bodyParser.json());
 
     app.disable('x-powered-by');
 
     app.use(cookieParser());
 
-    app.use(morgan('combined'));
+    app.use(morgan('dev'));
 
     app.use(session({
         secret: 'ryan123',
-        resave: false,    
+        resave: false,
         saveUninitialized: false
     }));
 
@@ -44,9 +48,9 @@ module.exports = () => {
     consign({
             cwd: '../server'
         })
-        .include('models')
-        .include('controllers')
-        .then('routes')
+        .include('models/')
+        .include('controllers/')
+        .then('routes/')
 
         .into(app);
 

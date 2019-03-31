@@ -4,6 +4,9 @@ const Schema = mongoose.Schema;
 const emailValidator = require('./validators/email'); 
 
 const UserSchema = new Schema({
+    name: {
+        type: String
+    },
     username: {
         type: String
     },
